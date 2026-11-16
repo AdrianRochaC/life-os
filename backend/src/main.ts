@@ -36,6 +36,7 @@ async function bootstrap(): Promise<void> {
       'API modular personal para gestionar metas, finanzas y estudio.',
     )
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

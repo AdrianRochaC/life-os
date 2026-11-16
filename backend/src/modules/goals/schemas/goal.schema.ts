@@ -27,6 +27,9 @@ export type GoalDocument = HydratedDocument<Goal>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Goal {
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
+  userId: Types.ObjectId;
+
   @Prop({ required: true, trim: true, maxlength: 120 })
   title: string;
 

@@ -28,7 +28,7 @@ function roundPercent(value: number): number {
   return Math.round(value * 10) / 10;
 }
 
-/** Handles goal creation, filtering, progress math, and saving contributions. */
+/** Handles goal creation, filtering, progress math, and saving contributions scoped to user. */
 @Injectable()
 export class GoalsService {
   constructor(
@@ -36,7 +36,7 @@ export class GoalsService {
     private readonly goalModel: Model<GoalDocument>,
   ) {}
 
-  async create(dto: CreateGoalDto): Promise<SerializedGoal> {
+  async create(userId: string, dto: CreateGoalDto): Promise<SerializedGoal> {
     const initialAmount = dto.currentAmount ?? 0;
     const contributions: GoalContribution[] = [];
 
@@ -52,6 +52,7 @@ export class GoalsService {
     const status = this.resolveStatus(initialAmount, dto.targetAmount);
 
     const created = await this.goalModel.create({
+      userId: new Types.ObjectId(userId),
       title: dto.title,
       description: dto.description,
       category: dto.category,
@@ -68,13 +69,19 @@ export class GoalsService {
     return this.serializeGoal(created);
   }
 
-  async findAll(query: QueryGoalsDto): Promise<GoalsListResponse> {
-    const filter = this.buildFilter(query);
+  async findAll(
+    userId: string,
+    query: QueryGoalsDto,
+  ): Promise<GoalsListResponse> {
+    const filter = this.buildFilter(userId, query);
 
     const [docs, allForSummary] = await Promise.all([
       this.goalModel.find(filter).sort({ createdAt: -1 }).exec(),
       this.goalModel
-        .find({}, { targetAmount: 1, currentAmount: 1, status: 1 })
+        .find(
+          { userId: new Types.ObjectId(userId) },
+          { targetAmount: 1, currentAmount: 1, status: 1 },
+        )
         .lean()
         .exec(),
     ]);
@@ -89,13 +96,17 @@ export class GoalsService {
     };
   }
 
-  async findOne(id: string): Promise<SerializedGoal> {
-    const goal = await this.findDocumentOrThrow(id);
+  async findOne(userId: string, id: string): Promise<SerializedGoal> {
+    const goal = await this.findDocumentOrThrow(userId, id);
     return this.serializeGoal(goal);
   }
 
-  async update(id: string, dto: UpdateGoalDto): Promise<SerializedGoal> {
-    const goal = await this.findDocumentOrThrow(id);
+  async update(
+    userId: string,
+    id: string,
+    dto: UpdateGoalDto,
+  ): Promise<SerializedGoal> {
+    const goal = await this.findDocumentOrThrow(userId, id);
 
     if (dto.title !== undefined) goal.title = dto.title;
     if (dto.description !== undefined) goal.description = dto.description;
@@ -122,10 +133,11 @@ export class GoalsService {
   }
 
   async addContribution(
+    userId: string,
     id: string,
     dto: AddContributionDto,
   ): Promise<SerializedGoal> {
-    const goal = await this.findDocumentOrThrow(id);
+    const goal = await this.findDocumentOrThrow(userId, id);
 
     goal.contributions.push({
       _id: new Types.ObjectId(),
@@ -146,10 +158,11 @@ export class GoalsService {
   }
 
   async removeContribution(
+    userId: string,
     goalId: string,
     contributionId: string,
   ): Promise<SerializedGoal> {
-    const goal = await this.findDocumentOrThrow(goalId);
+    const goal = await this.findDocumentOrThrow(userId, goalId);
     const index = goal.contributions.findIndex(
       (item) => item._id.toString() === contributionId,
     );
@@ -175,24 +188,44 @@ export class GoalsService {
     return this.serializeGoal(saved);
   }
 
-  async remove(id: string): Promise<{ deleted: true; id: string }> {
-    const deleted = await this.goalModel.findByIdAndDelete(id).exec();
+  async remove(userId: string, id: string): Promise<{ deleted: true; id: string }> {
+    const deleted = await this.goalModel
+      .findOneAndDelete({
+        _id: id,
+        userId: new Types.ObjectId(userId),
+      })
+      .exec();
+
     if (!deleted) {
       throw new NotFoundException(`No se encontró la meta con id "${id}".`);
     }
     return { deleted: true, id };
   }
 
-  private async findDocumentOrThrow(id: string): Promise<GoalDocument> {
-    const goal = await this.goalModel.findById(id).exec();
+  private async findDocumentOrThrow(
+    userId: string,
+    id: string,
+  ): Promise<GoalDocument> {
+    const goal = await this.goalModel
+      .findOne({
+        _id: id,
+        userId: new Types.ObjectId(userId),
+      })
+      .exec();
+
     if (!goal) {
       throw new NotFoundException(`No se encontró la meta con id "${id}".`);
     }
     return goal;
   }
 
-  private buildFilter(query: QueryGoalsDto): Record<string, unknown> {
-    const filter: Record<string, unknown> = {};
+  private buildFilter(
+    userId: string,
+    query: QueryGoalsDto,
+  ): Record<string, unknown> {
+    const filter: Record<string, unknown> = {
+      userId: new Types.ObjectId(userId),
+    };
 
     if (query.status) filter.status = query.status;
     if (query.category) filter.category = query.category;
@@ -307,4 +340,3 @@ export class GoalsService {
     };
   }
 }
-

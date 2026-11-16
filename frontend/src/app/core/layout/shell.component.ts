@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { AuthService } from '../auth/auth.service';
 import { I18nService, SupportedLang } from '../i18n/i18n.service';
 import { HealthApiService } from '../services/health-api.service';
 import { ThemeService } from '../theme/theme.service';
@@ -13,6 +14,7 @@ interface NavItem {
 
 @Component({
   selector: 'app-shell',
+  standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
@@ -21,6 +23,7 @@ export class ShellComponent implements OnInit {
   private readonly healthApi = inject(HealthApiService);
   readonly i18n = inject(I18nService);
   readonly themeService = inject(ThemeService);
+  readonly authService = inject(AuthService);
 
   readonly navItems: NavItem[] = [
     { labelKey: 'nav.goals', route: '/goals' },
@@ -58,5 +61,9 @@ export class ShellComponent implements OnInit {
 
   switchLang(lang: SupportedLang): void {
     void this.i18n.setLanguage(lang);
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

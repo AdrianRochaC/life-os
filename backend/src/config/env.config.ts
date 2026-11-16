@@ -3,6 +3,8 @@ export interface AppEnvironment {
   nodeEnv: string;
   mongodbUri: string;
   corsOrigins: string[];
+  jwtSecret: string;
+  jwtExpiresIn: string;
 }
 
 export function loadEnvConfig(): { app: AppEnvironment } {
@@ -28,13 +30,18 @@ export function loadEnvConfig(): { app: AppEnvironment } {
     .map((origin) => origin.trim())
     .filter(Boolean);
 
+  const jwtSecret =
+    process.env.JWT_SECRET?.trim() || 'life_os_dev_secret_key_2026_super_secure';
+  const jwtExpiresIn = process.env.JWT_EXPIRES_IN?.trim() || '7d';
+
   return {
     app: {
       port,
       nodeEnv: process.env.NODE_ENV ?? 'development',
       mongodbUri,
       corsOrigins,
+      jwtSecret,
+      jwtExpiresIn,
     },
   };
 }
-

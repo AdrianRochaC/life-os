@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppEnvironment, loadEnvConfig } from './config/env.config.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 import { GoalsModule } from './modules/goals/goals.module.js';
 import { HealthModule } from './modules/health/health.module.js';
+import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { HealthModule } from './modules/health/health.module.js';
       },
     }),
     HealthModule,
+    UsersModule,
+    AuthModule,
     GoalsModule,
   ],
 })

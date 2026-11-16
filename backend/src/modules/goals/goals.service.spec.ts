@@ -13,6 +13,7 @@ import { Goal } from './schemas/goal.schema.js';
 
 interface MockGoalRecord {
   _id: Types.ObjectId;
+  userId: Types.ObjectId;
   title: string;
   description?: string;
   category: GoalCategory;
@@ -37,6 +38,7 @@ interface MockGoalRecord {
 function makeGoalDoc(overrides: Partial<MockGoalRecord> = {}): MockGoalRecord {
   const doc: MockGoalRecord = {
     _id: new Types.ObjectId(),
+    userId: new Types.ObjectId(),
     title: 'Moto Yamaha MT-03',
     description: 'Meta principal de movilidad',
     category: GoalCategory.VEHICLE,
@@ -57,19 +59,20 @@ function makeGoalDoc(overrides: Partial<MockGoalRecord> = {}): MockGoalRecord {
 
 describe('GoalsService', () => {
   let service: GoalsService;
+  const mockUserId = new Types.ObjectId().toString();
   let goalModel: {
     create: ReturnType<typeof vi.fn>;
     find: ReturnType<typeof vi.fn>;
-    findById: ReturnType<typeof vi.fn>;
-    findByIdAndDelete: ReturnType<typeof vi.fn>;
+    findOne: ReturnType<typeof vi.fn>;
+    findOneAndDelete: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(async () => {
     goalModel = {
       create: vi.fn(),
       find: vi.fn(),
-      findById: vi.fn(),
-      findByIdAndDelete: vi.fn(),
+      findOne: vi.fn(),
+      findOneAndDelete: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -98,7 +101,7 @@ describe('GoalsService', () => {
     });
     goalModel.create.mockResolvedValue(doc);
 
-    const result = await service.create({
+    const result = await service.create(mockUserId, {
       title: 'Moto Yamaha MT-03',
       category: GoalCategory.VEHICLE,
       priority: GoalPriority.HIGH,
@@ -119,11 +122,11 @@ describe('GoalsService', () => {
       targetAmount: 5000,
       currentAmount: 4000,
     });
-    goalModel.findById.mockReturnValue({
+    goalModel.findOne.mockReturnValue({
       exec: vi.fn().mockResolvedValue(doc),
     });
 
-    const updated = await service.addContribution(doc._id.toString(), {
+    const updated = await service.addContribution(mockUserId, doc._id.toString(), {
       amount: 1200,
       note: 'Bono fin de año',
     });
@@ -150,11 +153,12 @@ describe('GoalsService', () => {
         },
       ],
     });
-    goalModel.findById.mockReturnValue({
+    goalModel.findOne.mockReturnValue({
       exec: vi.fn().mockResolvedValue(doc),
     });
 
     const updated = await service.removeContribution(
+      mockUserId,
       doc._id.toString(),
       contribId.toString(),
     );
@@ -201,7 +205,7 @@ describe('GoalsService', () => {
       .mockReturnValueOnce(filteredChain)
       .mockReturnValueOnce(summaryChain);
 
-    const response = await service.findAll({ search: 'a' });
+    const response = await service.findAll(mockUserId, { search: 'a' });
 
     expect(response.items.map((item) => item.title)).toEqual([
       'PC Dev',
@@ -218,13 +222,12 @@ describe('GoalsService', () => {
   });
 
   it('throws NotFoundException when goal does not exist', async () => {
-    goalModel.findById.mockReturnValue({
+    goalModel.findOne.mockReturnValue({
       exec: vi.fn().mockResolvedValue(null),
     });
 
     await expect(
-      service.findOne(new Types.ObjectId().toString()),
+      service.findOne(mockUserId, new Types.ObjectId().toString()),
     ).rejects.toThrow(NotFoundException);
   });
 });
-
