@@ -1,0 +1,143 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <div
+    class="modal-panel"
+    role="dialog"
+    aria-modal="true"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="modal-header">
+      <h2>
+        {{ (goal() ? 'goalForm.editTitle' : 'goalForm.createTitle') | t }}
+      </h2>
+      <button type="button" class="btn btn-ghost" (click)="close.emit()">✕</button>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
+      <div class="form-grid">
+        <div class="form-field full">
+          <label for="goal-title">{{ 'goalForm.titleLabel' | t }}</label>
+          <input
+            id="goal-title"
+            class="input-control"
+            type="text"
+            formControlName="title"
+            [placeholder]="'goalForm.titlePlaceholder' | t"
+          />
+          @if (form.controls.title.touched && form.controls.title.invalid) {
+            <span class="form-error">{{ 'goalForm.titleError' | t }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="goal-category">{{ 'goalForm.categoryLabel' | t }}</label>
+          <select id="goal-category" class="input-control" formControlName="category">
+            @for (opt of categories; track opt.value) {
+              <option [value]="opt.value">{{ opt.labelKey | t }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="goal-priority">{{ 'goalForm.priorityLabel' | t }}</label>
+          <select id="goal-priority" class="input-control" formControlName="priority">
+            <option value="high">{{ 'goals.priorities.high' | t }}</option>
+            <option value="medium">{{ 'goals.priorities.medium' | t }}</option>
+            <option value="low">{{ 'goals.priorities.low' | t }}</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="goal-target">{{ 'goalForm.targetLabel' | t }}</label>
+          <input
+            id="goal-target"
+            class="input-control"
+            type="number"
+            min="1"
+            step="1000"
+            formControlName="targetAmount"
+          />
+          @if (
+            form.controls.targetAmount.touched && form.controls.targetAmount.invalid
+          ) {
+            <span class="form-error">{{ 'goalForm.targetError' | t }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="goal-current">{{ 'goalForm.currentLabel' | t }}</label>
+          <input
+            id="goal-current"
+            class="input-control"
+            type="number"
+            min="0"
+            step="1000"
+            formControlName="currentAmount"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="goal-monthly">{{ 'goalForm.monthlyLabel' | t }}</label>
+          <input
+            id="goal-monthly"
+            class="input-control"
+            type="number"
+            min="0"
+            step="1000"
+            formControlName="monthlySavingTarget"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="goal-date">{{ 'goalForm.dateLabel' | t }}</label>
+          <input
+            id="goal-date"
+            class="input-control"
+            type="date"
+            formControlName="targetDate"
+          />
+        </div>
+
+        <div class="form-field full">
+          <label for="goal-url">{{ 'goalForm.urlLabel' | t }}</label>
+          <input
+            id="goal-url"
+            class="input-control"
+            type="url"
+            formControlName="referenceUrl"
+            [placeholder]="'goalForm.urlPlaceholder' | t"
+          />
+        </div>
+
+        <div class="form-field full">
+          <label for="goal-desc">{{ 'goalForm.descLabel' | t }}</label>
+          <textarea
+            id="goal-desc"
+            class="input-control"
+            rows="2"
+            formControlName="description"
+            [placeholder]="'goalForm.descPlaceholder' | t"
+          ></textarea>
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error server-error">{{ errorMessage() }}</p>
+      }
+
+      <footer class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="close.emit()">
+          {{ 'goalForm.cancel' | t }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{
+            (saving()
+              ? 'goalForm.saving'
+              : goal()
+                ? 'goalForm.saveChanges'
+                : 'goalForm.createSubmit') | t
+          }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

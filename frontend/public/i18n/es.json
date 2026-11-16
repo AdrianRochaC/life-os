@@ -1,0 +1,156 @@
+{
+  "app": {
+    "brand": "LifeOS",
+    "tagline": "Tu espacio personal",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "switchToDark": "Cambiar a modo oscuro",
+    "switchToLight": "Cambiar a modo claro"
+  },
+  "nav": {
+    "goals": "Metas",
+    "finances": "Finanzas",
+    "study": "Estudio",
+    "soon": "Pronto"
+  },
+  "health": {
+    "apiDisconnected": "API desconectada",
+    "checking": "Verificando...",
+    "connected": "MongoDB conectado",
+    "mongoStatus": "MongoDB: {{status}}"
+  },
+  "goals": {
+    "eyebrow": "Planificador de objetivos",
+    "title": "Metas de compra y ahorro",
+    "subtitle": "Convierte lo que quieres lograr —moto, PC, viajes o fondo— en pasos medibles.",
+    "newGoal": "Nueva meta",
+    "createFirst": "Crear mi primera meta",
+    "kpi": {
+      "savedTitle": "Total ahorrado",
+      "ofTarget": "de {{amount}} objetivo",
+      "progressTitle": "Avance global",
+      "progressSub": "Entre todas tus metas",
+      "activeTitle": "Metas activas",
+      "registeredCount": "{{count}} registradas",
+      "completedTitle": "Alcanzadas",
+      "completedSub": "Objetivos logrados"
+    },
+    "filters": {
+      "all": "Todas",
+      "active": "Activas",
+      "completed": "Completadas",
+      "paused": "Pausadas",
+      "allCategories": "Todas las categorías",
+      "searchPlaceholder": "Buscar por nombre o nota..."
+    },
+    "states": {
+      "loading": "Cargando tus metas...",
+      "emptyTitle": "Aún no hay metas aquí",
+      "emptySubtitle": "Crea una meta para tu moto, tu PC o cualquier compra importante y sigue cada abono.",
+      "loadError": "No se pudieron cargar tus metas. Verifica que el backend y MongoDB estén activos.",
+      "retry": "Reintentar",
+      "deleteConfirm": "¿Seguro que deseas eliminar la meta \"{{title}}\"?"
+    },
+    "card": {
+      "priorityPrefix": "Prioridad {{level}}",
+      "edit": "Editar",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "delete": "Eliminar",
+      "refLink": "Cotización",
+      "ofAmount": "de {{amount}}",
+      "completedPercent": "{{percent}}% completado",
+      "remaining": "Faltan {{amount}}",
+      "achieved": "¡Meta alcanzada!",
+      "monthlySaving": "Ahorro mensual",
+      "perMonth": "{{amount}}/mes",
+      "estimatedTime": "Tiempo estimado",
+      "ready": "Listo",
+      "oneMonth": "~1 mes",
+      "manyMonths": "~{{count}} meses",
+      "targetDate": "Fecha meta",
+      "addContribution": "Abonar",
+      "history": "Historial ({{count}})",
+      "noHistory": "Aún no hay abonos registrados.",
+      "removeContribution": "Quitar"
+    },
+    "categories": {
+      "vehicle": "Moto / Vehículo",
+      "tech": "PC / Tecnología",
+      "home": "Hogar / Setup",
+      "education": "Estudio / Cursos",
+      "travel": "Viajes",
+      "emergency": "Fondo / Emergencia",
+      "other": "Otra meta"
+    },
+    "priorities": {
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja"
+    },
+    "statuses": {
+      "active": "Activa",
+      "completed": "Completada",
+      "paused": "Pausada"
+    }
+  },
+  "goalForm": {
+    "createTitle": "Nueva meta",
+    "editTitle": "Editar meta",
+    "titleLabel": "¿Qué quieres lograr o comprar?",
+    "titlePlaceholder": "Ej. Moto Yamaha MT-03 o PC Gamer / Dev",
+    "titleError": "Escribe un título para tu meta.",
+    "categoryLabel": "Categoría",
+    "priorityLabel": "Prioridad",
+    "targetLabel": "Monto objetivo",
+    "targetError": "Ingresa un valor mayor a 0.",
+    "currentLabel": "Ahorro actual",
+    "monthlyLabel": "Ahorro mensual estimado (opcional)",
+    "dateLabel": "Fecha objetivo (opcional)",
+    "urlLabel": "Enlace de referencia / cotización (opcional)",
+    "urlPlaceholder": "https://...",
+    "descLabel": "Notas o detalles (opcional)",
+    "descPlaceholder": "Ej. Incluye casco, papeles o componentes específicos...",
+    "cancel": "Cancelar",
+    "saving": "Guardando...",
+    "saveChanges": "Guardar cambios",
+    "createSubmit": "Crear meta",
+    "genericError": "Ocurrió un error al guardar los datos."
+  },
+  "contribution": {
+    "title": "Abonar a \"{{title}}\"",
+    "remainingPrefix": "Faltan",
+    "remainingSuffix": "para alcanzar esta meta.",
+    "completeRemaining": "Completar ({{amount}})",
+    "amountLabel": "Monto del abono",
+    "amountError": "El abono debe ser mayor a 0.",
+    "dateLabel": "Fecha",
+    "noteLabel": "Nota (opcional)",
+    "notePlaceholder": "Ej. Ahorro de quincena, freelance...",
+    "cancel": "Cancelar",
+    "saving": "Registrando...",
+    "submit": "Registrar abono"
+  },
+  "comingSoon": {
+    "badge": "Próximo módulo en la ruta",
+    "plannedFeatures": "Funcionalidades planeadas",
+    "apiArchitecture": "Arquitectura API en NestJS",
+    "finances": {
+      "title": "Módulo de Finanzas Personales",
+      "subtitle": "Siguiente paso en la ruta: administrar cuentas, ingresos, gastos y conectarlo con tus abonos a metas.",
+      "f1": "Cuentas y billeteras (banco, efectivo, Nequi/Daviplata)",
+      "f2": "Registro de ingresos, gastos y transferencias por categoría",
+      "f3": "Resumen mensual (flujo neto, tasa de ahorro y presupuestos)",
+      "f4": "Conexión directa: abonar a una meta descuenta de la cuenta elegida"
+    },
+    "study": {
+      "title": "Módulo de Estudio y Proyectos",
+      "subtitle": "Tercer módulo en la ruta: organizar materias, rutas técnicas, tareas y sesiones de enfoque.",
+      "f1": "Materias / cursos con progreso por temas",
+      "f2": "Checklist de tareas y entregas con prioridad",
+      "f3": "Temporizador Pomodoro conectado al historial de horas estudiadas",
+      "f4": "Notas y enlaces de recursos por materia"
+    }
+  }
+}
+

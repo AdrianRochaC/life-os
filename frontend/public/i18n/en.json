@@ -1,0 +1,156 @@
+{
+  "app": {
+    "brand": "LifeOS",
+    "tagline": "Personal Workspace",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "nav": {
+    "goals": "Goals",
+    "finances": "Finances",
+    "study": "Study",
+    "soon": "Soon"
+  },
+  "health": {
+    "apiDisconnected": "API offline",
+    "checking": "Checking...",
+    "connected": "MongoDB connected",
+    "mongoStatus": "MongoDB: {{status}}"
+  },
+  "goals": {
+    "eyebrow": "Goal Planner",
+    "title": "Purchase & Savings Goals",
+    "subtitle": "Turn what you want — bike, PC, trips or safety net — into trackable milestones.",
+    "newGoal": "New goal",
+    "createFirst": "Create my first goal",
+    "kpi": {
+      "savedTitle": "Total saved",
+      "ofTarget": "of {{amount}} target",
+      "progressTitle": "Overall progress",
+      "progressSub": "Across all goals",
+      "activeTitle": "Active goals",
+      "registeredCount": "{{count}} total",
+      "completedTitle": "Completed",
+      "completedSub": "Milestones reached"
+    },
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "completed": "Completed",
+      "paused": "Paused",
+      "allCategories": "All categories",
+      "searchPlaceholder": "Search by title or note..."
+    },
+    "states": {
+      "loading": "Loading your goals...",
+      "emptyTitle": "No goals here yet",
+      "emptySubtitle": "Create a goal for your bike, PC or any major purchase and track every deposit.",
+      "loadError": "Could not load your goals. Make sure the backend and MongoDB are running.",
+      "retry": "Retry",
+      "deleteConfirm": "Are you sure you want to delete \"{{title}}\"?"
+    },
+    "card": {
+      "priorityPrefix": "{{level}} priority",
+      "edit": "Edit",
+      "pause": "Pause",
+      "resume": "Resume",
+      "delete": "Delete",
+      "refLink": "Reference",
+      "ofAmount": "of {{amount}}",
+      "completedPercent": "{{percent}}% complete",
+      "remaining": "{{amount}} left",
+      "achieved": "Goal reached!",
+      "monthlySaving": "Monthly target",
+      "perMonth": "{{amount}}/mo",
+      "estimatedTime": "Est. timeline",
+      "ready": "Ready",
+      "oneMonth": "~1 month",
+      "manyMonths": "~{{count}} months",
+      "targetDate": "Target date",
+      "addContribution": "Add deposit",
+      "history": "History ({{count}})",
+      "noHistory": "No deposits recorded yet.",
+      "removeContribution": "Remove"
+    },
+    "categories": {
+      "vehicle": "Bike / Vehicle",
+      "tech": "PC / Tech",
+      "home": "Home / Setup",
+      "education": "Study / Courses",
+      "travel": "Travel",
+      "emergency": "Emergency Fund",
+      "other": "Other"
+    },
+    "priorities": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "statuses": {
+      "active": "Active",
+      "completed": "Completed",
+      "paused": "Paused"
+    }
+  },
+  "goalForm": {
+    "createTitle": "New goal",
+    "editTitle": "Edit goal",
+    "titleLabel": "What do you want to achieve or buy?",
+    "titlePlaceholder": "e.g. Yamaha MT-03 Bike or Dev Workstation",
+    "titleError": "Please enter a title for your goal.",
+    "categoryLabel": "Category",
+    "priorityLabel": "Priority",
+    "targetLabel": "Target amount",
+    "targetError": "Enter an amount greater than 0.",
+    "currentLabel": "Current savings",
+    "monthlyLabel": "Planned monthly saving (optional)",
+    "dateLabel": "Target date (optional)",
+    "urlLabel": "Reference / quote URL (optional)",
+    "urlPlaceholder": "https://...",
+    "descLabel": "Notes or details (optional)",
+    "descPlaceholder": "e.g. Includes helmet, registration or specs...",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "createSubmit": "Create goal",
+    "genericError": "Something went wrong while saving."
+  },
+  "contribution": {
+    "title": "Add deposit to \"{{title}}\"",
+    "remainingPrefix": "You need",
+    "remainingSuffix": "more to reach this goal.",
+    "completeRemaining": "Finish ({{amount}})",
+    "amountLabel": "Deposit amount",
+    "amountError": "Deposit must be greater than 0.",
+    "dateLabel": "Date",
+    "noteLabel": "Note (optional)",
+    "notePlaceholder": "e.g. Paycheck savings, freelance...",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "submit": "Add deposit"
+  },
+  "comingSoon": {
+    "badge": "Next on the roadmap",
+    "plannedFeatures": "Planned features",
+    "apiArchitecture": "NestJS API architecture",
+    "finances": {
+      "title": "Personal Finances Module",
+      "subtitle": "Next step on the roadmap: manage accounts, income, expenses and link them directly to your goal deposits.",
+      "f1": "Accounts & wallets (bank, cash, digital wallets)",
+      "f2": "Income, expense & transfer tracking by category",
+      "f3": "Monthly summary (net cashflow, savings rate & budgets)",
+      "f4": "Direct link: depositing to a goal deducts from your chosen account"
+    },
+    "study": {
+      "title": "Study & Projects Module",
+      "subtitle": "Third step on the roadmap: organize subjects, learning paths, tasks and focus sessions.",
+      "f1": "Subjects & courses with topic-level progress",
+      "f2": "Task & assignment checklists with priorities",
+      "f3": "Pomodoro focus timer connected to study hours history",
+      "f4": "Notes and reference links per subject"
+    }
+  }
+}
+

@@ -1,0 +1,222 @@
+<article class="goal-card" [class.is-completed]="goal().status === 'completed'">
+  <header class="card-top">
+    <div class="card-identity">
+      <div
+        class="cat-pill"
+        [style.background]="categoryMeta().softBg"
+        [style.color]="categoryMeta().accentColor"
+      >
+        {{ categoryMeta().labelKey | t }}
+      </div>
+      <div class="badges-row">
+        <span class="badge" [class]="'badge-priority-' + goal().priority">
+          {{
+            'goals.card.priorityPrefix'
+              | t: { level: ('goals.priorities.' + goal().priority | t) }
+          }}
+        </span>
+        <span class="badge" [class]="'badge-status-' + goal().status">
+          {{ 'goals.statuses.' + goal().status | t }}
+        </span>
+      </div>
+    </div>
+
+    <div class="progress-ring" [attr.aria-label]="goal().progressPercent + '%'">
+      <svg viewBox="0 0 54 54">
+        <circle class="ring-track" cx="27" cy="27" r="22" />
+        <circle
+          class="ring-fill"
+          [class.is-completed]="goal().status === 'completed'"
+          cx="27"
+          cy="27"
+          r="22"
+          [style.stroke]="
+            goal().status === 'completed'
+              ? 'var(--accent-success)'
+              : categoryMeta().accentColor
+          "
+          [style.stroke-dasharray]="ringCircumference"
+          [style.stroke-dashoffset]="ringOffset()"
+        />
+      </svg>
+      <span>{{ goal().progressPercent }}%</span>
+    </div>
+  </header>
+
+  <div class="title-block">
+    <div class="title-line">
+      <h3>{{ goal().title }}</h3>
+      @if (goal().referenceUrl) {
+        <a
+          class="ref-link"
+          [href]="goal().referenceUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ 'goals.card.refLink' | t }} ↗
+        </a>
+      }
+    </div>
+    @if (goal().description) {
+      <p class="description">{{ goal().description }}</p>
+    }
+  </div>
+
+  <div class="amount-panel">
+    <div class="amounts">
+      <span class="saved">{{ goal().currentAmount | money }}</span>
+      <span class="target">
+        {{ 'goals.card.ofAmount' | t: { amount: (goal().targetAmount | money) } }}
+      </span>
+    </div>
+
+    <div class="bar-track">
+      <div
+        class="bar-fill"
+        [style.width.%]="goal().progressPercent"
+        [style.background]="
+          goal().status === 'completed'
+            ? 'var(--accent-success)'
+            : categoryMeta().accentColor
+        "
+      ></div>
+    </div>
+
+    <div class="amount-footer">
+      @if (goal().remainingAmount > 0) {
+        <span>
+          {{ 'goals.card.remaining' | t: { amount: (goal().remainingAmount | money) } }}
+        </span>
+      } @else {
+        <span class="achieved">{{ 'goals.card.achieved' | t }}</span>
+      }
+    </div>
+  </div>
+
+  @if (
+    goal().monthlySavingTarget ||
+    goal().estimatedMonthsToComplete !== null ||
+    goal().targetDate
+  ) {
+    <div class="facts-grid">
+      @if (goal().monthlySavingTarget) {
+        <div class="fact">
+          <span class="fact-label">{{ 'goals.card.monthlySaving' | t }}</span>
+          <span class="fact-value">
+            {{ 'goals.card.perMonth' | t: { amount: (goal().monthlySavingTarget | money) } }}
+          </span>
+        </div>
+      }
+      @if (goal().estimatedMonthsToComplete !== null) {
+        <div class="fact">
+          <span class="fact-label">{{ 'goals.card.estimatedTime' | t }}</span>
+          <span class="fact-value">
+            @if (goal().estimatedMonthsToComplete === 0) {
+              {{ 'goals.card.ready' | t }}
+            } @else if (goal().estimatedMonthsToComplete === 1) {
+              {{ 'goals.card.oneMonth' | t }}
+            } @else {
+              {{
+                'goals.card.manyMonths'
+                  | t: { count: goal().estimatedMonthsToComplete ?? 0 }
+              }}
+            }
+          </span>
+        </div>
+      }
+      @if (goal().targetDate) {
+        <div class="fact">
+          <span class="fact-label">{{ 'goals.card.targetDate' | t }}</span>
+          <span class="fact-value">{{ goal().targetDate | ldate }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  <footer class="card-footer">
+    <div class="primary-actions">
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        [disabled]="goal().status === 'completed'"
+        (click)="contribute.emit(goal())"
+      >
+        + {{ 'goals.card.addContribution' | t }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-ghost btn-sm"
+        (click)="toggleHistory()"
+      >
+        {{ 'goals.card.history' | t: { count: goal().contributions.length } }}
+      </button>
+    </div>
+
+    <div class="secondary-actions">
+      <button
+        type="button"
+        class="btn btn-ghost btn-xs"
+        (click)="edit.emit(goal())"
+      >
+        {{ 'goals.card.edit' | t }}
+      </button>
+      @if (goal().status !== 'completed') {
+        <button
+          type="button"
+          class="btn btn-ghost btn-xs"
+          (click)="togglePause.emit(goal())"
+        >
+          {{
+            (goal().status === 'paused'
+              ? 'goals.card.resume'
+              : 'goals.card.pause') | t
+          }}
+        </button>
+      }
+      <button
+        type="button"
+        class="btn btn-danger-ghost btn-xs"
+        (click)="remove.emit(goal())"
+      >
+        {{ 'goals.card.delete' | t }}
+      </button>
+    </div>
+  </footer>
+
+  @if (showHistory()) {
+    <section class="history">
+      @if (goal().contributions.length === 0) {
+        <p class="history-empty">{{ 'goals.card.noHistory' | t }}</p>
+      } @else {
+        <ul class="history-list">
+          @for (item of goal().contributions; track item.id) {
+            <li class="history-item">
+              <div>
+                <div class="history-amount">+{{ item.amount | money }}</div>
+                <div class="history-meta">
+                  {{ item.date | ldate }}
+                  @if (item.note) {
+                    · {{ item.note }}
+                  }
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-danger-ghost btn-xs"
+                (click)="
+                  removeContribution.emit({
+                    goalId: goal().id,
+                    contributionId: item.id,
+                  })
+                "
+              >
+                {{ 'goals.card.removeContribution' | t }}
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</article>

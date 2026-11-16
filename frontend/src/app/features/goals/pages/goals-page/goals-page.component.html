@@ -1,0 +1,159 @@
+<section class="page">
+  <section class="bento-hero">
+    <div class="hero-main">
+      <div class="hero-copy">
+        <span class="eyebrow">{{ 'goals.eyebrow' | t }}</span>
+        <h1>{{ 'goals.title' | t }}</h1>
+        <p>{{ 'goals.subtitle' | t }}</p>
+
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+            + {{ 'goals.newGoal' | t }}
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-gauge">
+        <div class="gauge-ring">
+          <svg viewBox="0 0 84 84">
+            <circle class="gauge-track" cx="42" cy="42" r="34" />
+            <circle
+              class="gauge-fill"
+              cx="42"
+              cy="42"
+              r="34"
+              [style.stroke-dasharray]="heroRingCircumference"
+              [style.stroke-dashoffset]="heroRingOffset()"
+            />
+          </svg>
+          <div class="gauge-center">
+            <strong>{{ store.summary().overallProgressPercent }}%</strong>
+          </div>
+        </div>
+        <span class="gauge-caption">{{ 'goals.kpi.progressTitle' | t }}</span>
+      </div>
+    </div>
+
+    <div class="bento-stats">
+      <div class="stat-tile tone-indigo">
+        <span class="stat-label">{{ 'goals.kpi.savedTitle' | t }}</span>
+        <strong class="stat-value">{{
+          store.summary().totalSavedAmount | money
+        }}</strong>
+        <span class="stat-sub">
+          {{
+            'goals.kpi.ofTarget'
+              | t: { amount: (store.summary().totalTargetAmount | money) }
+          }}
+        </span>
+      </div>
+
+      <div class="stat-tile tone-amber">
+        <span class="stat-label">{{ 'goals.kpi.activeTitle' | t }}</span>
+        <strong class="stat-value">{{ store.summary().activeGoals }}</strong>
+        <span class="stat-sub">
+          {{
+            'goals.kpi.registeredCount'
+              | t: { count: store.summary().totalGoals }
+          }}
+        </span>
+      </div>
+
+      <div class="stat-tile tone-emerald">
+        <span class="stat-label">{{ 'goals.kpi.completedTitle' | t }}</span>
+        <strong class="stat-value">{{ store.summary().completedGoals }}</strong>
+        <span class="stat-sub">{{ 'goals.kpi.completedSub' | t }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <div class="status-tabs" role="tablist">
+      @for (tab of statusTabs; track tab.value) {
+        <button
+          type="button"
+          class="tab-btn"
+          [class.is-active]="activeStatus() === tab.value"
+          (click)="selectStatus(tab.value)"
+        >
+          {{ tab.labelKey | t }}
+        </button>
+      }
+    </div>
+
+    <div class="filters">
+      <select
+        class="input-control select-filter"
+        [value]="activeCategory()"
+        (change)="selectCategory($event)"
+        [attr.aria-label]="'goals.filters.allCategories' | t"
+      >
+        <option value="all">{{ 'goals.filters.allCategories' | t }}</option>
+        @for (cat of categories; track cat.value) {
+          <option [value]="cat.value">{{ cat.labelKey | t }}</option>
+        }
+      </select>
+
+      <input
+        class="input-control search-input"
+        type="search"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        [placeholder]="'goals.filters.searchPlaceholder' | t"
+        [attr.aria-label]="'goals.filters.searchPlaceholder' | t"
+      />
+    </div>
+  </section>
+
+  @if (store.errorKey(); as errKey) {
+    <div class="alert-box">
+      <p>{{ errKey | t }}</p>
+      <button type="button" class="btn btn-ghost" (click)="store.loadGoals()">
+        {{ 'goals.states.retry' | t }}
+      </button>
+    </div>
+  } @else if (store.loading()) {
+    <div class="state-box">{{ 'goals.states.loading' | t }}</div>
+  } @else if (store.goals().length === 0) {
+    <div class="state-box">
+      <h3>{{ 'goals.states.emptyTitle' | t }}</h3>
+      <p>{{ 'goals.states.emptySubtitle' | t }}</p>
+      <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+        + {{ 'goals.createFirst' | t }}
+      </button>
+    </div>
+  } @else {
+    <div class="goals-grid">
+      @for (goal of store.goals(); track goal.id) {
+        <app-goal-card
+          [goal]="goal"
+          (contribute)="openContributionModal($event)"
+          (edit)="openEditModal($event)"
+          (togglePause)="toggleGoalPause($event)"
+          (remove)="deleteGoal($event)"
+          (removeContribution)="removeContribution($event)"
+        />
+      }
+    </div>
+  }
+</section>
+
+@if (showFormModal()) {
+  <app-goal-form-modal
+    [goal]="editingGoal()"
+    [saving]="modalSaving()"
+    [errorMessage]="modalError()"
+    (close)="closeFormModal()"
+    (submitGoal)="saveGoal($event)"
+  />
+}
+
+@if (contributingGoal(); as goal) {
+  <app-contribution-modal
+    [goal]="goal"
+    [saving]="modalSaving()"
+    [errorMessage]="modalError()"
+    (close)="closeContributionModal()"
+    (submitContribution)="saveContribution($event)"
+  />
+}
