@@ -17,7 +17,20 @@ async function bootstrap(): Promise<void> {
 
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: corsOrigins,
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (!origin) return callback(null, true);
+      if (
+        corsOrigins.includes(origin) ||
+        origin.includes('localhost') ||
+        origin.startsWith('capacitor://')
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin ${origin}`), false);
+    },
     credentials: true,
   });
 
