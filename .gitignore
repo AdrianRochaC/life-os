@@ -26,6 +26,7 @@ bazel-out/
 
 # IDEs & Editors
 .idea/
+**/.idea/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -37,10 +38,12 @@ bazel-out/
 
 # Android / Mobile (Capacitor & Android Studio)
 .gradle/
+**/.gradle/
 **/build/
 android/app/build/
 android/.gradle/
 local.properties
+**/local.properties
 *.keystore
 *.jks
 
